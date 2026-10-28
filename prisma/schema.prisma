@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Property {
+  id            String   @id @default(uuid())
+  title         String
+  description   String
+  address       String
+  price         Float
+  // Disponible | Reservada | Vendida | Alquilada
+  status        String   @default("Disponible")
+  images        String[] @default([])
+  // Venta | Alquiler. Nulable para que `prisma db push` no falle con filas
+  // existentes; el servicio las completa al arrancar (ver property.utils.ts).
+  operation     String?
+  // Casa | Apartamento | Apartaestudio | Lote | Local | Oficina | Finca
+  property_type String?
+  city          String?
+  created_at    DateTime @default(now())
+
+  @@map("properties")
+}
